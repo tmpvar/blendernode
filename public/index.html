@@ -1,0 +1,107 @@
+<html>
+<head>
+  <title>blendernode</title>
+  <script type="text/javascript" src="/js/jquery.js"></script>
+  <script type="text/javascript" src="/js/html5-filedrop.js"></script>
+  <script type="text/javascript" src="/skateboard.min.js"></script>
+  <style type="text/css">
+    #droptarget {
+      width: 400px;
+      border-radius: 5px;
+      background: #999;
+      border-color:#444;
+      text-align:center;
+      font-size: 3em;
+      font-weight: bold;
+      font-family:Helvetica;
+      padding-top: 150px;
+      padding-bottom:150px;
+      color: #ccc;
+    }
+
+    .progressbar{
+      border:1px solid black;
+      width:200px;
+      height:20px;
+      position:relative;
+      color:black;
+    }
+    .progressbar .percent{
+      position:absolute;
+
+      width:10;
+      height:100%;
+      background-color:#369;
+    }
+
+
+    .template { display: none;}
+  </style>
+</head>
+<body>
+
+<div id="droptarget">drop .blend</div>
+
+
+<div class="job template">
+  <span class="blend"></span>
+  (frame: <span class="frame">0</span>/<span class="total"></span>)
+
+  <div class="progressbar">
+    <div class="percent"></div>
+
+  </div>
+</div>
+
+<script type="text/javascript">
+  $(function() {
+    skateboard(function(stream) {
+      var q = '';
+
+      stream.on('data', function(d) {
+        q+=d;
+        var parts = q.split('\n');
+        q=parts.pop();
+
+        parts.forEach(function(line) {
+          var obj = JSON.parse(line);
+          stream.emit(obj.name, obj);
+        });
+      });
+
+      var last = 0;
+      stream.on('progress', function(data) {
+        console.log(data)
+        var blend = data.blend.replace(/\./,'-');
+
+        if ($('.job#' + blend).length === 0) {
+          var el = $('.job.template').clone();
+          el.attr('id', blend);
+          el.removeClass('template');
+          $(document.body).append(el);
+        }
+
+        var ctx = $('.job#' + blend);
+        $('.frame', ctx).text(data.frame);
+        $('.total', ctx).text(data.totalFrames);
+        if (data.percent > last || data.percent < 5) {
+          $('.percent', ctx).css({ width : data.percent + '%' });
+          last = data.percent;
+        }
+      });
+    });
+
+    $('#droptarget').fileUploader({
+      path: "/job",
+      progress: function(e, xhr, file) {
+        if (e.loaded < e.total) {
+          $('#droptarget').html(Math.round(e.loaded / e.total * 100) + '%');
+        } else {
+          $('#droptarget').html('drop .blend');
+        }
+      }
+    });
+  });
+</script>
+</body>
+</html>

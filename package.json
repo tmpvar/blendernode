@@ -1,0 +1,24 @@
+{
+  "name": "blendernode",
+  "version": "0.0.0",
+  "description": "ERROR: No README.md file found!",
+  "main": "index.js",
+  "bin": {
+    "blendernode": "blendernode.js"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": "",
+  "author": "",
+  "license": "BSD",
+  "readmeFilename": "README.md",
+  "dependencies": {
+    "optimist": "~0.3.5",
+    "defaults": "~1.0.0",
+    "awssum": "~0.12.2",
+    "skateboard": "~0.1.2",
+    "split": "~0.2.0",
+    "knox": "~0.5.2",
+  }
+}
