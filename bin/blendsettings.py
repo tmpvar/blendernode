@@ -1,4 +1,4 @@
 import bpy
 
-print('{"start":%d,"end":%d}' % (bpy.context.scene.frame_start, bpy.context.scene.frame_end))
+print('\n{"start":%d,"end":%d}\n' % (bpy.context.scene.frame_start, bpy.context.scene.frame_end))
 

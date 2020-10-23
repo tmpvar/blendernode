@@ -85,7 +85,7 @@
         $('.frame', ctx).text(data.frame);
         $('.total', ctx).text(data.totalFrames);
         if (data.percent > last || data.percent < 5) {
-          $('.percent', ctx).css({ width : data.percent + '%' });
+          $('.percent', ctx).css({ width : Math.min(data.percent, 100) + '%' });
           last = data.percent;
         }
       });
